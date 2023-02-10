@@ -1,21 +1,25 @@
-import { StringFlag, Compile } from "./lib";
+import { z } from "zod";
+import yargsParser from "yargs-parser";
+import { stringFlag, boolFlag, numberFlag } from "./lib";
+const yargv = yargsParser(process.argv.slice(2));
 
-async function main() {
-  const args = await Compile([
-    StringFlag({
-      name: "foo",
-      alias: "f",
+const d = z
+  .object({
+    foo: stringFlag({
       envars: ["FOO"],
+      default: "fffff",
+      description: "aaaaaaaaaa",
     }),
-    StringFlag({
-      name: "bar",
-      alias: "b",
-      envars: ["BAR"],
-      validator: () => Promise.reject("aaa"),
+    bar: boolFlag({
+      envars: ["FOO"],
+      default: true,
+      description: "aaaaaaaaaa",
     }),
-  ]);
+    baz: numberFlag({
+      envars: ["BAZ"],
+      description: "aaaaaaaaaa",
+    }),
+  })
+  .parse(yargv);
 
-  console.log(args);
-}
-
-main();
+console.log(d);
